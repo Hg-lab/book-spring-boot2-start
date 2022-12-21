@@ -8,7 +8,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 
@@ -33,16 +32,17 @@ public class AutoconfigurationApplicationTests {
 
     @Test
     public void testValue(){
-        assertThat(propertyTestName, is("property depth test"));
-        assertThat(propertyTest, is("test"));
-        assertThat(defaultValue, is("default value"));
+        assertEquals(propertyTestName, "property depth test");
+        assertEquals(propertyTest, "test");
+        assertEquals(defaultValue, "default value");
 
-        assertThat(propertyTestArray[0], is("a"));
-        assertThat(propertyTestArray[1], is("b"));
-        assertThat(propertyTestArray[2], is("c"));
+        assertEquals(propertyTestArray[0], "a");
+        assertEquals(propertyTestArray[1], "b");
+        assertEquals(propertyTestArray[2], "c");
 
-        assertThat(propertyTestList.get(0), is("a"));
-        assertThat(propertyTestList.get(1), is("b"));
-        assertThat(propertyTestList.get(2), is("c"));
+        assertEquals(propertyTestList.get(0), "a");
+        assertEquals(propertyTestList.get(1), "b");
+        assertEquals(propertyTestList.get(2), "c");
+
     }
 }
