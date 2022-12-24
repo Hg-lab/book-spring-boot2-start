@@ -4,71 +4,43 @@ plugins {
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
-group = 'com.community'
-version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+allprojects {
+    group = 'com.community'
+    version = '0.0.1-SNAPSHOT'
+    sourceCompatibility = '1.8'
 
-repositories {
-    mavenCentral()
-    maven { url 'https://repo.spring.io/milestone' }
-    maven { url 'https://repo.spring.io/snapshot' }
+    apply plugin: 'io.spring.dependency-management'
+    apply plugin: 'org.springframework.boot'
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        maven { url 'https://repo.spring.io/milestone' }
+        maven { url 'https://repo.spring.io/snapshot' }
+    }
 }
 
-dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.springframework.boot:spring-boot-starter-test'
-
-    runtimeOnly 'com.h2database:h2'
-
-}
-
-tasks.named('test') {
-    useJUnitPlatform()
-}
-//
-//subprojects {
-//
-//    apply plugin: 'java'
-//    apply plugin: 'idea'
-//    apply plugin: 'org.springframework.boot'
-//    apply plugin: 'io.spring.dependency-management'
-//
-//    group 'org.example'
-//    version '1.0-SNAPSHOT'
-//
-//    sourceCompatibility = '11'
-//    targetCompatibility = '11'
-//    compileJava.options.encoding = 'UTF-8'
-//
-//    repositories {
-//        mavenCentral()
-//    }
-//
-//    // 하위 모듈에서 공통으로 사용하는 세팅 추가
-//    dependencies {
-//
-//        implementation 'org.projectlombok:lombok:1.18.22'
-//
-//        annotationProcessor 'org.projectlombok:lombok'
-//        annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
-//
-//        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-//        testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
-//    }
-//
-//    test {
-//        useJUnitPlatform()
-//    }
-//}
-
-
-// 각 프로젝트에서만 사용하는 의존성 추가
-
-
-project(':demo-web') {
+allprojects {
     dependencies {
-        // 컴파일시 core 모듈을 가져온다.
-//        compileOnly project(':community')
-//        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-web'
+        implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+        compileOnly 'org.projectlombok:lombok'
+
+        runtimeOnly 'com.h2database:h2'
+
+        annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+        annotationProcessor 'org.projectlombok:lombok'
+
+        testImplementation 'org.springframework.boot:spring-boot-starter-test'
+        testImplementation 'junit:junit'
+        //JUnit4 추가 - springboot 2.6.x 이상은 Junit5가 기본으로 설치됨
+        testImplementation("org.junit.vintage:junit-vintage-engine") {
+            exclude group: "org.hamcrest", module: "hamcrest-core"
+        }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 }
