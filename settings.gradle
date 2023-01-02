@@ -9,4 +9,5 @@ rootProject.name = 'community'
 
 include 'demo-web'
 include 'spring-boot-test'
+include 'spring-boot-community-web'
 
