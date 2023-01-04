@@ -1,16 +1,24 @@
-
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-}
+    // Spring Boot 1.5.x 세팅용
+    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.5.2'
 
-repositories {
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-}
+    implementation('org.springframework.boot:spring-boot-starter-thymeleaf')
+    implementation('org.springframework.boot:spring-boot-starter-data-jpa')
+    implementation('org.thymeleaf.extras:thymeleaf-extras-java8time')
 
-bootJar {
-    enabled = false
-}
+    runtimeOnly('com.h2database:h2')
+    //runtimeOnly('mysql:mysql-connector-java')
+    runtimeOnly('org.springframework.boot:spring-boot-devtools')
+    compileOnly('org.projectlombok:lombok:1.18.14')
+    annotationProcessor('org.projectlombok:lombok:1.18.14')
 
-jar {
-    enabled = true
+    testImplementation('org.springframework.boot:spring-boot-starter-test')
+    testImplementation 'org.springframework.security:spring-security-test'
+    testAnnotationProcessor('org.projectlombok:lombok:1.18.14')
+
 }
