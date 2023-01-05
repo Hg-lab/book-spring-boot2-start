@@ -30,6 +30,7 @@ import static com.web.domain.enums.SocialType.*;
 @Component
 public class UserArgumentResolver implements HandlerMethodArgumentResolver {
 
+    @Autowired
     private UserRepository userRepository;
 
     @Override

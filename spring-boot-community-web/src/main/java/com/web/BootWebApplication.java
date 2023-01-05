@@ -22,12 +22,13 @@ import java.util.stream.IntStream;
 @SpringBootApplication
 public class BootWebApplication extends WebMvcConfigurerAdapter {
 
+    @Autowired
+    private UserArgumentResolver userArgumentResolver;
+
+
     public static void main(String[] args) {
         SpringApplication.run(BootWebApplication.class, args);
     }
-
-    @Autowired
-    private UserArgumentResolver userArgumentResolver;
 
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
