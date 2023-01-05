@@ -37,4 +37,4 @@ out/
 .vscode/
 
 
-./spring-boot-community-web/src/main/resources/application.yml
+spring-boot-community-web/src/main/resources/application.yml
