@@ -4,8 +4,8 @@ import com.web.annotation.SocialUser;
 import com.web.domain.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.HttpSession;
 
 @Controller
 public class LoginController {
@@ -15,8 +15,14 @@ public class LoginController {
         return "login";
     }
 
-    @GetMapping(value = "/{facebook|google|kakao}/complete")
+    @GetMapping("/loginSuccess")
     public String loginComplete(@SocialUser User user) {
+        return "redirect:/board/list";
+    }
+
+    @GetMapping("/oauth2/kakao")
+    public String kakaoCallback(@RequestParam String code) {
+        System.out.println("code = " + code);
         return "redirect:/board/list";
     }
 }
