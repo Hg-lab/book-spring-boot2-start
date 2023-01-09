@@ -46,7 +46,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     private User getUser(User user, HttpSession session) {
-        if(user == null) {
+         if(user == null) {
             try {
                 OAuth2AuthenticationToken authentication = (OAuth2AuthenticationToken)
                         SecurityContextHolder.getContext().getAuthentication();
@@ -67,7 +67,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     private User convertUser(String authority, Map<String, Object> map) {
         if(FACEBOOK.getValue().equals(authority)) return getModernUser(FACEBOOK, map);
         else if(GOOGLE.getValue().equals(authority)) return getModernUser(GOOGLE, map);
-        else if(KAKAO.getValue().equals(authority)) return getKaKaoUser(map);
+        else if(KAKAO.getValue().equals(authority)) return getKakaoUser(map);
         return null;
     }
 
@@ -81,11 +81,12 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
                 .build();
     }
 
-    private User getKaKaoUser(Map<String, Object> map) {
+    private User getKakaoUser(Map<String, Object> map) {
         HashMap<String, String> propertyMap = (HashMap<String, String>) map.get("properties");
+        HashMap<String, String> accountMap = (HashMap<String, String>) map.get("kakao_account");
         return User.builder()
                 .name(propertyMap.get("nickname"))
-                .email(String.valueOf(map.get("kaccount_email")))
+                .email(accountMap.get("email"))
                 .principal(String.valueOf(map.get("id")))
                 .socialType(KAKAO)
                 .createdDate(LocalDateTime.now())
