@@ -39,7 +39,7 @@ public class Board {
     @Column
     private LocalDateTime updatedDate;
 
-    @OneToOne
+    @OneToOne // FetchType.Lazy 제거 - InvalidDefinitionException: No serializer found for class
     private User user;
 
     @Builder
