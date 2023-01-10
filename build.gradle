@@ -25,13 +25,14 @@ allprojects {
         implementation 'org.springframework.boot:spring-boot-starter-web'
         implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
-        compileOnly 'org.projectlombok:lombok'
+        compileOnly 'org.projectlombok:lombok:1.18.14'
 
         runtimeOnly 'com.h2database:h2'
 
         annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
-        annotationProcessor 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok:1.18.14'
 
+        testAnnotationProcessor 'org.projectlombok:lombok:1.18.14'
         testImplementation 'org.springframework.boot:spring-boot-starter-test'
         testImplementation 'junit:junit'
         //JUnit4 추가 - springboot 2.6.x 이상은 Junit5가 기본으로 설치됨
