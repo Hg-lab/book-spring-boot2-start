@@ -1,7 +1,7 @@
 package com.community.rest;
 
 import com.community.rest.domain.Board;
-import com.community.rest.domain.User;
+//import com.community.rest.domain.User;
 import com.community.rest.domain.enums.BoardType;
 import com.community.rest.repository.BoardRepository;
 import com.community.rest.repository.UserRepository;
@@ -14,12 +14,15 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.IntStream;
 
 @SpringBootApplication
@@ -28,30 +31,30 @@ public class RestWebApplication {
         SpringApplication.run(RestWebApplication.class, args);
     }
 
-    @Bean
-    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository)
-            throws Exception {
-        return args -> {
-            User user = userRepository.save(User.builder()
-                    .name("hank")
-                    .password("test")
-                    .email("hank@email.com")
-                    .createdDate(LocalDateTime.now())
-                    .build());
-
-            IntStream.rangeClosed(1, 200).forEach(index ->
-                    boardRepository.save(Board.builder()
-                            .title("게시글" + index)
-                            .subTitle("순서" + index)
-                            .content("콘텐츠")
-                            .boardType(BoardType.free)
-                            .createdDate(LocalDateTime.now())
-                            .updatedDate(LocalDateTime.now())
-                            .user(user).build())
-            );
-        };
-
-    }
+//    @Bean
+//    public CommandLineRunner runner(UserRepository userRepository, BoardRepository boardRepository)
+//            throws Exception {
+//        return args -> {
+//            User user = userRepository.save(User.builder()
+//                    .name("hank")
+//                    .password("test")
+//                    .email("hank@email.com")
+//                    .createdDate(LocalDateTime.now())
+//                    .build());
+//
+//            IntStream.rangeClosed(1, 200).forEach(index ->
+//                    boardRepository.save(Board.builder()
+//                            .title("게시글" + index)
+//                            .subTitle("순서" + index)
+//                            .content("콘텐츠")
+//                            .boardType(BoardType.free)
+//                            .createdDate(LocalDateTime.now())
+//                            .updatedDate(LocalDateTime.now())
+//                            .user(user).build())
+//            );
+//        };
+//
+//    }
 
     @Configuration
     @EnableGlobalMethodSecurity(prePostEnabled = true)
@@ -73,7 +76,7 @@ public class RestWebApplication {
                     .and().cors().configurationSource(source)
                     .and().csrf().disable();
         }
-
+//
 //        @Bean
 //        InMemoryUserDetailsManager userDetailsManager() {
 //            User.UserBuilder commonUser = User.withUsername("commonUser");
@@ -85,7 +88,7 @@ public class RestWebApplication {
 //
 //            return new InMemoryUserDetailsManager(userDetailsList);
 //        }
-//
+
     }
 
 }

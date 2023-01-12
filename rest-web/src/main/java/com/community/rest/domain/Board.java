@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -42,6 +43,14 @@ public class Board {
     @OneToOne // FetchType.Lazy 제거 - InvalidDefinitionException: No serializer found for class
     private User user;
 
+    public void setCreatedDateNow() {
+        this.createdDate = LocalDateTime.now();
+    }
+
+    public void setUpdatedDateNow() {
+        this.updatedDate = LocalDateTime.now();
+    }
+
     @Builder
     public Board(String title, String subTitle, String content, BoardType boardType,
                  LocalDateTime createdDate, LocalDateTime updatedDate, User user) {
@@ -52,5 +61,13 @@ public class Board {
         this.createdDate = createdDate;
         this.updatedDate = updatedDate;
         this.user = user;
+    }
+
+    public void update(Board board) {
+        this.title = board.getTitle();
+        this.subTitle = board.getSubTitle();
+        this.content = board.getContent();
+        this.boardType = board.getBoardType();
+        this.updatedDate = LocalDateTime.now();
     }
 }

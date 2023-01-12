@@ -60,8 +60,8 @@
         </div>
         <div class="pull-right">
             <button th:if="!${board?.idx}" type="button" class="btn btn-primary" th:id="insert">저장</button>
-            <button th:if="!${board?.idx}" type="button" class="btn btn-info" th:id="update">수정</button>
-            <button th:if="!${board?.idx}" type="button" class="btn btn-danger" th:id="delete">삭제</button>
+            <button th:if="${board?.idx}" type="button" class="btn btn-info" th:id="update">수정</button>
+            <button th:if="${board?.idx}" type="button" class="btn btn-danger" th:id="delete">삭제</button>
         </div>
     </div>
 
@@ -81,9 +81,9 @@
                 type: "POST",
                 data: jsonData,
                 contentType: "application/json",
-                headers: {
-                    "Authorization": "Basic " + btoa("havi" + ":" + "test")
-                },
+                // headers: {
+                //     "Authorization": "hank" + ":" + "test"
+                // },
                 dataType: "json",
                 success: function () {
                     alert('저장 성공!');
