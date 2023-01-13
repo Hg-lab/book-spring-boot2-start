@@ -12,4 +12,5 @@ include 'spring-boot-test'
 include 'spring-boot-community-web'
 include 'data-rest'
 include 'rest-web'
+include 'data-rest'
 

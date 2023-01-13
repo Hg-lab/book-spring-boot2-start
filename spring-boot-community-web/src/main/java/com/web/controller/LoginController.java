@@ -32,6 +32,11 @@ public class LoginController {
     private static final String DEFAULT_LOGIN_REDIRECT_URL
             = "{baseUrl}/oauth2/{registrationId}";
 
+    @GetMapping({"", "/"})
+    public String home() {
+        return "login";
+    }
+
     @GetMapping("/login")
     public String login() {
         return "login";
