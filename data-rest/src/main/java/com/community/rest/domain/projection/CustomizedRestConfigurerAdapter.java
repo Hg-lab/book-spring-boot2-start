@@ -10,7 +10,7 @@ public class CustomizedRestConfigurerAdapter extends RepositoryRestConfigurerAda
 
     @Override
     public void configureRepositoryRestConfiguration(RepositoryRestConfiguration config) {
-//        super.configureRepositoryRestConfiguration(config);
+        super.configureRepositoryRestConfiguration(config);
         config.getProjectionConfiguration().addProjection(UserOnlyContainName.class);
     }
 }
