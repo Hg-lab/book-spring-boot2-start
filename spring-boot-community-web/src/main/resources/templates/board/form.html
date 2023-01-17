@@ -81,8 +81,11 @@
                 type: "POST",
                 data: jsonData,
                 contentType: "application/json",
+                headers: {
+                    "Authorization": "Basic " + btoa("hank" + ":" + "test")
+                },
                 // headers: {
-                //     "Authorization": "hank" + ":" + "test"
+                //     "Authorization": "Basic " + btoa("commonUser" + ":" + "test")
                 // },
                 dataType: "json",
                 success: function () {
