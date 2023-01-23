@@ -13,4 +13,5 @@ include 'spring-boot-community-web'
 include 'data-rest'
 include 'rest-web'
 include 'data-rest'
+include 'spring-boot-community-batch'
 
