@@ -10,12 +10,15 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.item.ItemWriter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
 @AllArgsConstructor
 @Configuration
 public class InactiveUserJobConfig {
@@ -35,8 +38,8 @@ public class InactiveUserJobConfig {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(10)
                 .reader(inactiveUserReader())
-//                .processor(inactiveUserProcessor())
-//                .writer(inactiveUserWriter())
+                .processor(inactiveUserProcessor())
+                .writer(inactiveUserWriter())
                 .build();
     }
 
@@ -48,5 +51,21 @@ public class InactiveUserJobConfig {
         );
         return new QueueItemReader<>(oldUsers);
     }
+
+    public ItemProcessor<User, User> inactiveUserProcessor() {
+//        return User::setInactive;
+        return new ItemProcessor<User, User>() {
+
+            @Override
+            public User process(User user) {
+                return user.setInactive();
+            }
+        };
+    }
+
+    public ItemWriter<User> inactiveUserWriter() {
+        return ((List<? extends User> users) -> userRepository.saveAll(users));
+    }
+
 
 }
