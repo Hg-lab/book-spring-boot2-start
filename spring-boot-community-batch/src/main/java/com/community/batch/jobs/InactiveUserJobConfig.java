@@ -87,7 +87,12 @@ public class InactiveUserJobConfig {
     @Bean(destroyMethod = "")
     @StepScope
     public JpaPagingItemReader<User> inactiveUserJpaReader() {
-        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader<>();
+        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader(){
+            @Override
+            public int getPage() {
+                return 0;
+            }
+        };
         jpaPagingItemReader.setQueryString(
                 "select u from User as u where u.updatedDate < :updatedDate and u.state = :status"
         );
