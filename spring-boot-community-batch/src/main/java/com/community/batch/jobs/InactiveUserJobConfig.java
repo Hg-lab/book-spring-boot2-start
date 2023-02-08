@@ -15,11 +15,14 @@ import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
 import org.springframework.batch.item.database.JpaPagingItemReader;
 import org.springframework.batch.item.support.ListItemReader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,10 +46,11 @@ public class InactiveUserJobConfig {
     }
 
     @Bean
-    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory) {
+    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory, ListItemReader<User> inactiveUserReader) {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE)
-                .reader(inactiveUserReader())
+//                .reader(inactiveUserReader())
+                .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
                 .writer(inactiveUserWriter())
                 .build();
@@ -63,9 +67,12 @@ public class InactiveUserJobConfig {
 
     @Bean
     @StepScope
-    public ListItemReader<User> inactiveUserReader() {
+    public ListItemReader<User> inactiveUserReader(@Value("#{jobParameters[nowDate]}") Date nowDate, UserRepository userRepository) {
+        LocalDateTime now = LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault());
         List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
-                LocalDateTime.now().minusYears(1), UserStatus.ACTIVE
+//                LocalDateTime.now()
+                    now
+                        .minusYears(1), UserStatus.ACTIVE
         );
         return new ListItemReader<>(oldUsers);
     }
