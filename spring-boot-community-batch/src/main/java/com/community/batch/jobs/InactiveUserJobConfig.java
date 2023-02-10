@@ -48,7 +48,7 @@ public class InactiveUserJobConfig {
     @Bean
     public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory, ListItemReader<User> inactiveUserReader) {
         return stepBuilderFactory.get("inactiveUserStep")
-                .<User, User>chunk(CHUNK_SIZE)
+                .<User, User>chunk(CHUNK_SIZE) // <I, O>
 //                .reader(inactiveUserReader())
                 .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
