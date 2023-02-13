@@ -50,6 +50,7 @@ public class InactiveUserJobConfig {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE) // <I, O>
 //                .reader(inactiveUserReader())
+//                .reader(inactiveUserJpaReader())
                 .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
                 .writer(inactiveUserWriter())
