@@ -46,12 +46,13 @@ public class InactiveUserJobConfig {
     }
 
     @Bean
-    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory, ListItemReader<User> inactiveUserReader) {
+    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory, JpaPagingItemReader<User> inactiveUserJpaReader) {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE) // <I, O>
 //                .reader(inactiveUserReader())
 //                .reader(inactiveUserJpaReader())
-                .reader(inactiveUserReader)
+                .reader(inactiveUserJpaReader)
+//                .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
                 .writer(inactiveUserWriter())
                 .build();
@@ -103,7 +104,7 @@ public class InactiveUserJobConfig {
             }
         };
         jpaPagingItemReader.setQueryString(
-                "select u from User as u where u.updatedDate < :updatedDate and u.state = :status"
+                "select u from User as u where u.updatedDate < :updatedDate and u.status = :status"
         );
 
         Map<String, Object> map = new HashMap<>();
