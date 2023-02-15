@@ -46,12 +46,14 @@ public class InactiveUserJobConfig {
     }
 
     @Bean
-    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory, JpaPagingItemReader<User> inactiveUserJpaReader) {
+    public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory
+//            , ListItemReader<User> inactiveUserReader
+    ) {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE) // <I, O>
-//                .reader(inactiveUserReader())
+                .reader(inactiveUserReader())
 //                .reader(inactiveUserJpaReader())
-                .reader(inactiveUserJpaReader)
+//                .reader(inactiveUserJpaReader)
 //                .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
                 .writer(inactiveUserWriter())
@@ -60,34 +62,28 @@ public class InactiveUserJobConfig {
 
 //    @Bean
 //    @StepScope
-//    public QueueItemReader<User> inactiveUserReader() {
-//        List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
-//                LocalDateTime.now().minusYears(1), UserStatus.ACTIVE
-//        );
-//        return new QueueItemReader<>(oldUsers);
-//    }
-
-    @Bean
-    @StepScope
-    public ListItemReader<User> inactiveUserReader(@Value("#{jobParameters[nowDate]}") Date nowDate, UserRepository userRepository) {
-        LocalDateTime now = LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault());
+    public QueueItemReader<User> inactiveUserReader() {
         List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
-//                LocalDateTime.now()
-                    now
-                        .minusYears(1), UserStatus.ACTIVE
+                LocalDateTime.now().minusYears(1), UserStatus.ACTIVE
         );
-        return new ListItemReader<>(oldUsers);
+        return new QueueItemReader<>(oldUsers);
     }
+
+//    @Bean
+//    @StepScope
+//    public ListItemReader<User> inactiveUserReader(@Value("#{jobParameters[nowDate]}") Date nowDate, UserRepository userRepository) {
+//        LocalDateTime now = LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault());
+//        List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
+////                LocalDateTime.now()
+//                    now
+//                        .minusYears(1), UserStatus.ACTIVE
+//        );
+//        return new ListItemReader<>(oldUsers);
+//    }
 
     public ItemProcessor<User, User> inactiveUserProcessor() {
 //        return User::setInactive;
-        return new ItemProcessor<User, User>() {
-
-            @Override
-            public User process(User user) {
-                return user.setInactive();
-            }
-        };
+        return user -> user.setInactive();
     }
 
 //    public ItemWriter<User> inactiveUserWriter() {
