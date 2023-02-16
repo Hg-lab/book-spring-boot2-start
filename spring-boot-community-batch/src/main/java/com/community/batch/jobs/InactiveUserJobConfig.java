@@ -47,39 +47,39 @@ public class InactiveUserJobConfig {
 
     @Bean
     public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory
-//            , ListItemReader<User> inactiveUserReader
+            , ListItemReader<User> inactiveUserReader
     ) {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE) // <I, O>
-                .reader(inactiveUserReader())
+//                .reader(inactiveUserReader())
 //                .reader(inactiveUserJpaReader())
 //                .reader(inactiveUserJpaReader)
-//                .reader(inactiveUserReader)
+                .reader(inactiveUserReader)
                 .processor(inactiveUserProcessor())
                 .writer(inactiveUserWriter())
                 .build();
     }
 
-//    @Bean
-//    @StepScope
-    public QueueItemReader<User> inactiveUserReader() {
-        List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
-                LocalDateTime.now().minusYears(1), UserStatus.ACTIVE
-        );
-        return new QueueItemReader<>(oldUsers);
-    }
-
-//    @Bean
-//    @StepScope
-//    public ListItemReader<User> inactiveUserReader(@Value("#{jobParameters[nowDate]}") Date nowDate, UserRepository userRepository) {
-//        LocalDateTime now = LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault());
+////    @Bean
+////    @StepScope
+//    public QueueItemReader<User> inactiveUserReader() {
 //        List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
-////                LocalDateTime.now()
-//                    now
-//                        .minusYears(1), UserStatus.ACTIVE
+//                LocalDateTime.now().minusYears(1), UserStatus.ACTIVE
 //        );
-//        return new ListItemReader<>(oldUsers);
+//        return new QueueItemReader<>(oldUsers);
 //    }
+
+    @Bean
+    @StepScope
+    public ListItemReader<User> inactiveUserReader(@Value("#{jobParameters[nowDate]}") Date nowDate, UserRepository userRepository) {
+        LocalDateTime now = LocalDateTime.ofInstant(nowDate.toInstant(), ZoneId.systemDefault());
+        List<User> oldUsers = userRepository.findByUpdatedDateBeforeAndStatusEquals(
+//                LocalDateTime.now()
+                    now
+                        .minusYears(1), UserStatus.ACTIVE
+        );
+        return new ListItemReader<>(oldUsers);
+    }
 
     public ItemProcessor<User, User> inactiveUserProcessor() {
 //        return User::setInactive;
@@ -90,29 +90,29 @@ public class InactiveUserJobConfig {
 //        return ((List<? extends User> users) -> userRepository.saveAll(users));
 //    }
 
-    @Bean(destroyMethod = "")
-    @StepScope
-    public JpaPagingItemReader<User> inactiveUserJpaReader() {
-        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader(){
-            @Override
-            public int getPage() {
-                return 0;
-            }
-        };
-        jpaPagingItemReader.setQueryString(
-                "select u from User as u where u.updatedDate < :updatedDate and u.status = :status"
-        );
-
-        Map<String, Object> map = new HashMap<>();
-        LocalDateTime now = LocalDateTime.now();
-        map.put("updatedDate", now.minusYears(1));
-        map.put("status", UserStatus.ACTIVE);
-
-        jpaPagingItemReader.setParameterValues(map);
-        jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
-        jpaPagingItemReader.setPageSize(CHUNK_SIZE);
-        return jpaPagingItemReader;
-    }
+//    @Bean(destroyMethod = "")
+//    @StepScope
+//    public JpaPagingItemReader<User> inactiveUserJpaReader() {
+//        JpaPagingItemReader<User> jpaPagingItemReader = new JpaPagingItemReader(){
+//            @Override
+//            public int getPage() {
+//                return 0;
+//            }
+//        };
+//        jpaPagingItemReader.setQueryString(
+//                "select u from User as u where u.updatedDate < :updatedDate and u.status = :status"
+//        );
+//
+//        Map<String, Object> map = new HashMap<>();
+//        LocalDateTime now = LocalDateTime.now();
+//        map.put("updatedDate", now.minusYears(1));
+//        map.put("status", UserStatus.ACTIVE);
+//
+//        jpaPagingItemReader.setParameterValues(map);
+//        jpaPagingItemReader.setEntityManagerFactory(entityManagerFactory);
+//        jpaPagingItemReader.setPageSize(CHUNK_SIZE);
+//        return jpaPagingItemReader;
+//    }
 
     private JpaItemWriter<User> inactiveUserWriter() {
         JpaItemWriter<User> jpaItemWriter = new JpaItemWriter<>();
