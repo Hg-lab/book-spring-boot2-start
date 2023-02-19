@@ -3,8 +3,10 @@ package com.community.batch.jobs.inactive.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobExecutionListener;
+import org.springframework.stereotype.Component;
 
 @Slf4j
+@Component
 public class InactiveJobListener implements JobExecutionListener {
 
     @Override
