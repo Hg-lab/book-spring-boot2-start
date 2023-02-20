@@ -2,6 +2,7 @@ package com.community.batch.jobs;
 
 import com.community.batch.domain.User;
 import com.community.batch.domain.enums.UserStatus;
+import com.community.batch.jobs.inactive.InactiveItemTasklet;
 import com.community.batch.jobs.inactive.listener.InactiveJobListener;
 import com.community.batch.jobs.readers.QueueItemReader;
 import com.community.batch.repository.UserRepository;
@@ -11,6 +12,7 @@ import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
+import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.item.ItemProcessor;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.JpaItemWriter;
@@ -49,16 +51,18 @@ public class InactiveUserJobConfig {
 
     @Bean
     public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory
-            , ListItemReader<User> inactiveUserReader
+//            , ListItemReader<User> inactiveUserReader
+            , Tasklet inactiveItemTasklet
     ) {
         return stepBuilderFactory.get("inactiveUserStep")
-                .<User, User>chunk(CHUNK_SIZE) // <I, O>
-//                .reader(inactiveUserReader())
-//                .reader(inactiveUserJpaReader())
-//                .reader(inactiveUserJpaReader)
-                .reader(inactiveUserReader)
-                .processor(inactiveUserProcessor())
-                .writer(inactiveUserWriter())
+//                .<User, User>chunk(CHUNK_SIZE) // <I, O>
+////                .reader(inactiveUserReader())
+////                .reader(inactiveUserJpaReader())
+////                .reader(inactiveUserJpaReader)
+//                .reader(inactiveUserReader)
+//                .processor(inactiveUserProcessor())
+//                .writer(inactiveUserWriter())
+                .tasklet(inactiveItemTasklet)
                 .build();
     }
 
@@ -120,5 +124,10 @@ public class InactiveUserJobConfig {
         JpaItemWriter<User> jpaItemWriter = new JpaItemWriter<>();
         jpaItemWriter.setEntityManagerFactory(entityManagerFactory);
         return jpaItemWriter;
+    }
+
+    @Bean
+    public Tasklet inactiveItemTasklet(UserRepository userRepository) {
+        return new InactiveItemTasklet(userRepository);
     }
 }
