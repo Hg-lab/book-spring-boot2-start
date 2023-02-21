@@ -127,7 +127,7 @@ public class InactiveUserJobConfig {
     }
 
     @Bean
-    public Tasklet inactiveItemTasklet(UserRepository userRepository) {
+    public Tasklet inactiveItemTasklet() {
         return new InactiveItemTasklet(userRepository);
     }
 }
