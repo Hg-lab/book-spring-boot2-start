@@ -4,6 +4,7 @@ import com.community.batch.domain.User;
 import com.community.batch.domain.enums.UserStatus;
 import com.community.batch.jobs.inactive.InactiveItemTasklet;
 import com.community.batch.jobs.inactive.listener.InactiveJobListener;
+import com.community.batch.jobs.inactive.listener.InactiveStepListener;
 import com.community.batch.jobs.readers.QueueItemReader;
 import com.community.batch.repository.UserRepository;
 import lombok.AllArgsConstructor;
@@ -51,18 +52,20 @@ public class InactiveUserJobConfig {
 
     @Bean
     public Step inactiveJobStep(StepBuilderFactory stepBuilderFactory
-//            , ListItemReader<User> inactiveUserReader
-            , Tasklet inactiveItemTasklet
+            , ListItemReader<User> inactiveUserReader
+//            , Tasklet inactiveItemTasklet
+            , InactiveStepListener inactiveStepListener
     ) {
         return stepBuilderFactory.get("inactiveUserStep")
-//                .<User, User>chunk(CHUNK_SIZE) // <I, O>
+                .<User, User>chunk(CHUNK_SIZE) // <I, O>
 ////                .reader(inactiveUserReader())
 ////                .reader(inactiveUserJpaReader())
 ////                .reader(inactiveUserJpaReader)
-//                .reader(inactiveUserReader)
-//                .processor(inactiveUserProcessor())
-//                .writer(inactiveUserWriter())
-                .tasklet(inactiveItemTasklet)
+                .reader(inactiveUserReader)
+                .processor(inactiveUserProcessor())
+                .writer(inactiveUserWriter())
+                .listener(inactiveStepListener)
+//                .tasklet(inactiveItemTasklet)
                 .build();
     }
 
