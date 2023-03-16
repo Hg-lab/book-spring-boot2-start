@@ -26,6 +26,8 @@ import org.springframework.batch.item.support.ListItemReader;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.task.SimpleAsyncTaskExecutor;
+import org.springframework.core.task.TaskExecutor;
 
 import javax.persistence.EntityManagerFactory;
 import java.time.LocalDateTime;
@@ -74,6 +76,7 @@ public class InactiveUserJobConfig {
             , ListItemReader<User> inactiveUserReader
 //            , Tasklet inactiveItemTasklet
             , InactiveStepListener inactiveStepListener
+            , TaskExecutor taskExecutor
     ) {
         return stepBuilderFactory.get("inactiveUserStep")
                 .<User, User>chunk(CHUNK_SIZE) // <I, O>
@@ -85,6 +88,8 @@ public class InactiveUserJobConfig {
                 .writer(inactiveUserWriter())
                 .listener(inactiveStepListener)
 //                .tasklet(inactiveItemTasklet)
+                .taskExecutor(taskExecutor)
+                .throttleLimit(2)
                 .build();
     }
 
@@ -151,5 +156,10 @@ public class InactiveUserJobConfig {
     @Bean
     public Tasklet inactiveItemTasklet() {
         return new InactiveItemTasklet(userRepository);
+    }
+
+    @Bean
+    public TaskExecutor taskExecutor() {
+        return new SimpleAsyncTaskExecutor("Batch_Task");
     }
 }
